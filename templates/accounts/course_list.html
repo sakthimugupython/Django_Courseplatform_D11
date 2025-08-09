@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">{% if mine %}My Courses{% else %}Courses{% endif %}</h2>
+  {% if user.is_authenticated and user.instructor_profile %}
+    <a class="btn btn-primary" href="{% url 'create_course' %}">New Course</a>
+  {% endif %}
+</div>
+
+{% if courses %}
+  <div class="list-group">
+    {% for c in courses %}
+      <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <div>
+            <h5 class="mb-1"><a href="{% url 'course_detail' c.id %}">{{ c.title }}</a></h5>
+            <small class="text-muted">Instructor: {{ c.instructor.user.username }}</small>
+          </div>
+          <div class="text-end">
+            <small class="text-muted d-block">{{ c.created_at|date:"Y-m-d H:i" }}</small>
+            {% if user.is_authenticated and user.instructor_profile and c.instructor_id == user.instructor_profile.id %}
+              <a class="btn btn-sm btn-outline-secondary mt-2" href="{% url 'manage_course_progress' c.id %}">Manage</a>
+            {% endif %}
+          </div>
+        </div>
+        <p class="mb-1 mt-2">{{ c.description|default:"No description" }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted">No courses yet.</p>
+{% endif %}
+{% endblock %}

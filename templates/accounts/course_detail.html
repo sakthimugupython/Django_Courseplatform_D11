@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">{{ course.title }}</h2>
+  <a class="btn btn-secondary" href="{% url 'courses' %}">Back to Courses</a>
+</div>
+<p class="text-muted">Instructor: {{ course.instructor.user.username }} · {{ course.created_at|date:"Y-m-d" }}</p>
+<p>{{ course.description|default:"No description" }}</p>
+
+{% if user.is_authenticated and user.student_profile %}
+  {% if enrolled_progress %}
+    <div class="alert alert-success">You are enrolled. Current progress: {{ enrolled_progress.progress_percent }}%</div>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-primary" type="submit">Enroll</button>
+    </form>
+  {% endif %}
+{% else %}
+  <div class="alert alert-info">Login as a student to enroll.</div>
+{% endif %}
+{% endblock %}

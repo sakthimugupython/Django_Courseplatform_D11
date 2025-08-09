@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-3">Update Progress for {{ prog.student.user.username }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label">{{ field.label }}</label>
+      {{ field }}
+      {% for error in field.errors %}
+        <div class="text-danger small">{{ error }}</div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">Save</button>
+  <a class="btn btn-secondary" href="{% url 'manage_course_progress' prog.course.id %}">Cancel</a>
+</form>
+{% endblock %}

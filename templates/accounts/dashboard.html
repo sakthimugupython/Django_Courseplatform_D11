@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-3">Dashboard</h2>
+{% if student_profile %}
+  <div class="alert alert-primary">Logged in as <strong>Student</strong></div>
+  <h5>Your progress</h5>
+  {% if progress_items %}
+    <ul class="list-group mb-3">
+      {% for item in progress_items %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ item.course.title|default:item.course_name }}
+          <span class="badge bg-secondary">{{ item.progress_percent }}%</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No progress yet.</p>
+  {% endif %}
+
+  <h5 class="mt-4">Available courses</h5>
+  {% if published_courses %}
+    <ul class="list-group mb-3">
+      {% for c in published_courses %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ c.title }}</strong>
+            <div class="text-muted small">Instructor: {{ c.instructor.user.username }}</div>
+          </div>
+          <small class="text-muted">{{ c.created_at|date:"Y-m-d" }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+    <a class="btn btn-outline-primary" href="{% url 'courses' %}">Browse all courses</a>
+  {% else %}
+    <p class="text-muted">No published courses yet.</p>
+  {% endif %}
+{% elif instructor_profile %}
+  <div class="alert alert-success">Logged in as <strong>Instructor</strong></div>
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Your courses</h5>
+    <div>
+      <a class="btn btn-sm btn-primary" href="{% url 'create_course' %}">New Course</a>
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'my_courses' %}">View all</a>
+    </div>
+  </div>
+  {% if instructor_courses %}
+    <div class="list-group">
+      {% for c in instructor_courses %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ c.title }}</strong>
+            <div class="text-muted small">{{ c.created_at|date:"Y-m-d" }} · {% if c.is_published %}Published{% else %}Draft{% endif %}</div>
+          </div>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'manage_course_progress' c.id %}">Manage</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">You have no courses yet. Create one to get started.</p>
+  {% endif %}
+{% else %}
+  <div class="alert alert-warning">No profile associated with this user.</div>
+{% endif %}
+{% endblock %}
