@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-mezds=%ym!9b@*d*xj0x*+w(_z39659^xetplmg1%n5xarul!l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
